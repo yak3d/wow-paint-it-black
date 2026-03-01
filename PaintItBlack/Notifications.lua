@@ -39,7 +39,7 @@ function ns.ShowReminder(phase)
 
   print("|cFFFFCC00[Paint It Black]|r " .. msg)
 
-  C_Timer.After(5, function()
+  C_Timer.After(ns.db.alertDuration, function()
     frame:Hide()
   end)
 end

@@ -79,6 +79,12 @@ function ns.InitSettings()
     "Minutes between reminders.",
     1, 30, 1, 5
   )
+  addSlider(
+    "alertDuration",
+    "Alert Duration (seconds)",
+    "How long the on-screen alert stays visible.",
+    1, 30, 1, 5
+  )
 
   Settings.RegisterAddOnCategory(category)
 

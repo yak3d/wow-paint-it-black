@@ -1,10 +1,21 @@
 ## Interface: 120001
-## Title: Paint It Black
-## Notes: Provides a reminder to drink your Inky Black Potion when its night!
+## Title: Paint It |cFF333333Black|r
+## Notes: Provides a reminder to drink your Inky Black Potion when it's night!
 ## Author: Yak
 ## Version: 1.0.0
 ## SavedVariables: PaintItBlackDB
-## IconTexture: 134722
+## IconTexture: 134757
+## Category: Buffs & Debuffs
+## Category-deDE: Buffs & Debuffs
+## Category-esES: Beneficios y Perjuicios
+## Category-esMX: Beneficios y Perjuicios
+## Category-frFR: Améliorations et Affaiblissements
+## Category-itIT: Benefici e penalità
+## Category-koKR: 버프 및 디버프
+## Category-ptBR: Bônus e Penalidades
+## Category-ruRU: Баффы и дебаффы
+## Category-zhCN: 增益和减益
+## Category-zhTW: 增益與減益
 
 Core.lua
 Config.lua

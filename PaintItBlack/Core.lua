@@ -16,6 +16,7 @@ ns.defaults = {
   dayHour          = 6,
   dayMinute        = 0,
   reminderInterval = 1,
+  alertDuration    = 5,
 }
 
 -------------------------
@@ -207,5 +208,19 @@ function frame:UNIT_AURA(unit)
     ns.removedBuffToday = true
     ns.dbg("Aura change detected: " .. tostring(hasBuff))
   end
+end
+
+---------------------------------------------------------------------------
+-- Debug slash command to dump internal state
+---------------------------------------------------------------------------
+SLASH_PIBDEBUG1 = "/pibdebug"
+SlashCmdList["PIBDEBUG"] = function()
+    ns.dbg("enabled: " .. tostring(ns.db.enabled))
+    ns.dbg("phase: " .. tostring(ns.GetTimePhase()))
+    ns.dbg("hasBuff: " .. tostring(ns.HasInkyBlackness()))
+    ns.dbg("usedPotionTonight: " .. tostring(ns.usedPotionTonight))
+    ns.dbg("removedBuffToday: " .. tostring(ns.removedBuffToday))
+    ns.dbg("pendingReminder: " .. tostring(ns.pendingReminder))
+    ns.dbg("lastPhase: " .. tostring(ns.lastPhase))
 end
 
