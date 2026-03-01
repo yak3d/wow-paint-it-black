@@ -1,0 +1,14 @@
+{
+  "runtime": {
+    "version": "Lua 5.1"
+  },
+  "workspace": {
+    "library": [
+      "~/.local/share/nvim/warcraft-api/ketho-wow-api/Annotations"
+    ],
+    "checkThirdParty": false,
+  },
+  "diagnostics": {
+    "globals": []
+  }
+}

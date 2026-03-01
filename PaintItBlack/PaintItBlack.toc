@@ -1,0 +1,12 @@
+## Interface: 120001
+## Title: Paint It Black
+## Notes: Provides a reminder to drink your Inky Black Potion when its night!
+## Author: Yak
+## Version: 1.0.0
+## SavedVariables: PaintItBlackDB
+## IconTexture: 134722
+
+Core.lua
+Config.lua
+Notifications.lua
+

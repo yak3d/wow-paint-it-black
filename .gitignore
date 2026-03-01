@@ -1,0 +1,14 @@
+# WoW SavedVariables (generated at runtime)
+WTF/
+
+# Editor/IDE files
+.luarc.json
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
