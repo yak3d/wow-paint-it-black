@@ -21,7 +21,8 @@ All settings are found in the WoW Settings panel under Addons, or by typing `/pi
 | Night Starts                 | Text     | HH:MM    | 19:00   | When "use potion" reminders begin                    |
 | Day Starts                   | Text     | HH:MM    | 06:00   | When "remove buff" reminders begin                   |
 | Reminder Interval (minutes)  | Slider   | 1--30    | 5       | Minutes between repeated reminders                   |
-| Alert Duration (seconds)     | Slider   | 1--30    | 5       | How long the on-screen alert stays visible           |
+| Alert Duration (seconds)     | Slider   | 1--60    | 5       | How long the on-screen alert stays visible           |
+| Alert Sound                  | Dropdown | —        | Whisper | Sound played with reminders (select to preview)      |
 
 Settings are saved per-character in `PaintItBlackDB` and persist across sessions.
 

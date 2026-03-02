@@ -35,7 +35,9 @@ function ns.ShowReminder(phase)
   text:SetText(msg)
   frame:Show()
 
-  PlaySound(3081)
+  if ns.db.alertSound > 0 then
+    PlaySound(ns.db.alertSound, "SFX")
+  end
 
   print("|cFFFFCC00[Paint It Black]|r " .. msg)
 

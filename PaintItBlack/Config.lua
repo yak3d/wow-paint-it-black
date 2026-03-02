@@ -116,8 +116,38 @@ function ns.InitSettings()
     "alertDuration",
     "Alert Duration (seconds)",
     "How long the on-screen alert stays visible.",
-    1, 30, 1, 5
+    1, 60, 1, 5
   )
+
+  -- Alert Sound dropdown
+  local soundSetting = Settings.RegisterAddOnSetting(
+    category,
+    "PaintItBlack_alertSound",
+    "alertSound",
+    PaintItBlackDB,
+    type(1),
+    "Alert Sound",
+    3081
+  )
+
+  local function GetSoundOptions()
+    local container = Settings.CreateControlTextContainer()
+    container:Add(0,    "None")
+    container:Add(3081, "Whisper (default)")
+    container:Add(8959, "Raid Warning")
+    container:Add(8960, "Ready Check")
+    container:Add(3175, "Map Ping")
+    container:Add(619,  "Quest Complete")
+    container:Add(888,  "Level Up")
+    return container:GetData()
+  end
+
+  Settings.CreateDropdown(category, soundSetting, GetSoundOptions, "Sound played with reminders (select to preview).")
+  soundSetting:SetValueChangedCallback(function(_, val)
+    if val > 0 then
+      PlaySound(val, "SFX")
+    end
+  end)
 
   Settings.RegisterAddOnCategory(category)
 

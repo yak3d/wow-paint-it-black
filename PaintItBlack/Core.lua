@@ -15,6 +15,7 @@ ns.defaults = {
   dayStart         = "06:00",
   reminderInterval = 1,
   alertDuration    = 5,
+  alertSound       = 3081,
 }
 
 function ns.ParseTime(str)
