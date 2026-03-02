@@ -17,6 +17,7 @@
 ## Category-zhCN: 增益和减益
 ## Category-zhTW: 增益與減益
 
+TimeInput.xml
 Core.lua
 Config.lua
 Notifications.lua

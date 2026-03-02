@@ -1,5 +1,39 @@
 local addonName, ns = ...
 
+PIBTimeInputMixin = {}
+
+function PIBTimeInputMixin:OnLoad()
+  SettingsListElementMixin.OnLoad(self)
+end
+
+function PIBTimeInputMixin:Init(initializer)
+  SettingsListElementMixin.Init(self, initializer)
+
+  local data = initializer:GetData()
+  self.setting = data.setting
+  self.EditBox:SetText(data.setting:GetValue())
+
+  self.EditBox:SetScript("OnEnterPressed", function()
+    self:Commit()
+  end)
+  self.EditBox:SetScript("OnEditFocusLost", function()
+    self:Commit()
+  end)
+end
+
+function PIBTimeInputMixin:Commit()
+  local text = self.EditBox:GetText()
+  local h, m = ns.ParseTime(text)
+  if h then
+    local formatted = string.format("%02d:%02d", h, m)
+    self.EditBox:SetText(formatted)
+    self.setting:SetValue(formatted)
+  else
+    self.EditBox:SetText(self.setting:GetValue())
+  end
+  self.EditBox:ClearFocus()
+end
+
 function ns.InitSettings()
   -- settings category
   local category = Settings.RegisterVerticalLayoutCategory("Paint It Black")
@@ -50,29 +84,28 @@ function ns.InitSettings()
   )
   Settings.CreateCheckbox(category, debugSetting, "Print debug messages to chat.")
 
-  addSlider(
-    "nightHour",
-    "Night Starts (Hour)",
-    "Hour when 'use potion' reminders begin (24h format).",
-    0, 23, 1, 19
-  )
-  addSlider(
-    "nightMinute",
-    "Night Starts (Minute)",
-    "Minute offset for night start.",
-    0, 59, 1, 0)
-  addSlider(
-    "dayHour",
-    "Day Starts (Hour)",
-    "Hour when 'remove buff' reminders begin (24h format).",
-    0, 23, 1, 6
-  )
-  addSlider(
-    "dayMinute",
-    "Day Starts (Minute)",
-    "Minute offset for day start.",
-    0, 59, 1, 0
-  )
+  local function addTimeInput(key, label, tooltip, default)
+    local setting = Settings.RegisterAddOnSetting(
+      category,
+      "PaintItBlack_" .. key,
+      key,
+      PaintItBlackDB,
+      type(""),
+      label,
+      default
+    )
+
+    local data = Settings.CreateSettingInitializerData(setting, nil, tooltip)
+    local initializer = Settings.CreateSettingInitializer("PIBTimeInputTemplate", data)
+    Settings.RegisterInitializer(category, initializer)
+
+    setting:SetValueChangedCallback(function()
+      ns.StartCheckCycle()
+    end)
+  end
+
+  addTimeInput("nightStart", "Night Starts", "When 'use potion' reminders begin (HH:MM, 24h format).", "19:00")
+  addTimeInput("dayStart", "Day Starts", "When 'remove buff' reminders begin (HH:MM, 24h format).", "06:00")
   addSlider(
     "reminderInterval",
     "Reminder Interval (minutes)",

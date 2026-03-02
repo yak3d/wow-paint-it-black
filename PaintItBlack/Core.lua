@@ -11,13 +11,20 @@ ns.BUFF_SPELL_ID = 185394
 ns.defaults = {
   enabled          = true,
   debug            = false,
-  nightHour        = 19,
-  nightMinute      = 0,
-  dayHour          = 6,
-  dayMinute        = 0,
+  nightStart       = "19:00",
+  dayStart         = "06:00",
   reminderInterval = 1,
   alertDuration    = 5,
 }
+
+function ns.ParseTime(str)
+  if type(str) ~= "string" then return nil end
+  local h, m = str:match("^(%d%d?):(%d%d?)$")
+  if not h then return nil end
+  h, m = tonumber(h), tonumber(m)
+  if h > 23 or m > 59 then return nil end
+  return h, m
+end
 
 -------------------------
 -- State                |
@@ -36,8 +43,10 @@ end
 function ns.GetTimePhase()
   local now = date("*t")
   local currentMin = now.hour * 60 + now.min
-  local nightStart = ns.db.nightHour * 60 + ns.db.nightMinute
-  local dayStart   = ns.db.dayHour * 60 + ns.db.dayMinute
+  local nh, nm = ns.ParseTime(ns.db.nightStart)
+  local dh, dm = ns.ParseTime(ns.db.dayStart)
+  local nightStart = (nh or 19) * 60 + (nm or 0)
+  local dayStart   = (dh or 6) * 60 + (dm or 0)
 
   -- Normal case: night = 19:00, day = 06:00
   -- Night phase wraps around midnight: 19:00 -> 23:59 and 00:00 -> 05:59
@@ -172,6 +181,16 @@ function frame:ADDON_LOADED(loadedAddon)
 
   ns.db = PaintItBlackDB
 
+  -- migrate old nightHour/nightMinute/dayHour/dayMinute to HH:MM strings
+  if ns.db.nightHour ~= nil then
+    ns.db.nightStart = string.format("%02d:%02d", ns.db.nightHour or 19, ns.db.nightMinute or 0)
+    ns.db.dayStart   = string.format("%02d:%02d", ns.db.dayHour or 6, ns.db.dayMinute or 0)
+    ns.db.nightHour   = nil
+    ns.db.nightMinute = nil
+    ns.db.dayHour     = nil
+    ns.db.dayMinute   = nil
+  end
+
   ns.InitSettings()
 
   ns.lastCheckDate = date("%Y-%m-%d")
@@ -203,6 +222,9 @@ function frame:UNIT_AURA(unit)
 
   if phase == "night" and hasBuff then
     ns.usedPotionTonight = true
+    ns.dbg("Aura change detected: " .. tostring(hasBuff))
+  elseif phase == "day" and hasBuff then
+    ns.removedBuffToday = false
     ns.dbg("Aura change detected: " .. tostring(hasBuff))
   elseif phase == "day" and not hasBuff then
     ns.removedBuffToday = true
