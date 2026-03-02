@@ -25,6 +25,13 @@ All settings are found in the WoW Settings panel under Addons, or by typing `/pi
 
 Settings are saved per-character in `PaintItBlackDB` and persist across sessions.
 
+## Commands
+
+| Command      | Description                          |
+|--------------|--------------------------------------|
+| `/pib`       | Open the settings panel              |
+| `/pibdebug`  | Dump internal state to chat (requires Debug Mode) |
+
 ## Installation
 
 ### Using the Makefile
