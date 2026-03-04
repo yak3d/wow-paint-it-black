@@ -2,7 +2,7 @@
 ## Title: Paint It |cFF333333Black|r
 ## Notes: Provides a reminder to drink your Inky Black Potion when it's night!
 ## Author: Yak
-## Version: 1.0.0
+## Version: 1.0.1
 ## SavedVariables: PaintItBlackDB
 ## IconTexture: 134757
 ## Category: Buffs & Debuffs

@@ -46,3 +46,7 @@ function ns.ShowReminder(phase)
   end)
 end
 
+function ns.HideReminder()
+  frame:Hide()
+end
+

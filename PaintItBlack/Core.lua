@@ -223,12 +223,18 @@ function frame:UNIT_AURA(unit)
 
   if phase == "night" and hasBuff then
     ns.usedPotionTonight = true
+    ns.HideReminder()
     ns.dbg("Aura change detected: " .. tostring(hasBuff))
+  elseif phase == "night" and not hasBuff and ns.usedPotionTonight then
+    ns.usedPotionTonight = false
+    ns.dbg("Buff expired during night, resetting flag")
+    ns.CheckAndRemind()
   elseif phase == "day" and hasBuff then
     ns.removedBuffToday = false
     ns.dbg("Aura change detected: " .. tostring(hasBuff))
   elseif phase == "day" and not hasBuff then
     ns.removedBuffToday = true
+    ns.HideReminder()
     ns.dbg("Aura change detected: " .. tostring(hasBuff))
   end
 end

@@ -3,15 +3,16 @@ name: Tag & Release
 on:
   push:
     branches: [main]
-    tags: ["v*"]
 
 permissions:
   contents: write
 
 jobs:
   tag-version:
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    outputs:
+      new_tag: ${{ steps.tag.outputs.new_tag }}
+      version: ${{ steps.version.outputs.current }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,6 +28,7 @@ jobs:
           echo "Current=$VERSION Previous=$PREV"
 
       - name: Create and push tag
+        id: tag
         if: steps.version.outputs.current != steps.version.outputs.previous && steps.version.outputs.current != ''
         run: |
           TAG="v${{ steps.version.outputs.current }}"
@@ -36,40 +38,25 @@ jobs:
           fi
           git tag "$TAG"
           git push origin "$TAG"
+          echo "new_tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "Pushed tag ${TAG}"
 
-  build-archive:
+  build-and-release:
+    needs: tag-version
+    if: needs.tag-version.outputs.new_tag != ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Build zip
         run: |
-          VERSION=$(grep -m1 '^## Version:' PaintItBlack/PaintItBlack.toc | awk '{print $3}')
-          echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
+          VERSION="${{ needs.tag-version.outputs.version }}"
           zip -r "PaintItBlack-Retail-v${VERSION}.zip" PaintItBlack/*.toc PaintItBlack/*.lua PaintItBlack/*.xml
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: PaintItBlack-Retail-v${{ env.VERSION }}
-          path: PaintItBlack-Retail-*.zip
-          retention-days: 90
-
-  publish-release:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: build-archive
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          pattern: PaintItBlack-Retail-*
-          merge-multiple: true
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          name: PaintItBlack ${{ github.ref_name }}
-          body: "Release ${{ github.ref_name }}"
-          files: PaintItBlack-Retail-*.zip
+          tag_name: ${{ needs.tag-version.outputs.new_tag }}
+          name: PaintItBlack ${{ needs.tag-version.outputs.new_tag }}
+          body: "Release ${{ needs.tag-version.outputs.new_tag }}"
+          files: PaintItBlack-Retail-v*.zip
